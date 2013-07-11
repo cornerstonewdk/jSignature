@@ -7,7 +7,7 @@ MIT License <http://www.opensource.org/licenses/mit-license.php>
 */
 ;(function() {
 
-var apinamespace = 'jSignature'
+var apinamespace = 'sign'
 
 /**
 Allows one to delay certain eventual action by setting up a timer for it and allowing one to delay it
@@ -471,6 +471,7 @@ var basicDot = function(ctx, x, y, size){
 , strokeStartCallback = function(stroke) {
 	// this = jSignatureClass instance
 	basicDot(this.canvasContext, stroke.x[0], stroke.y[0], this.settings.lineWidth)
+	this.$parent.trigger( e = $.Event('start.cs.sign') );
 }
 , strokeAddCallback = function(stroke, positionInStroke){
 	// this = jSignatureClass instance
@@ -553,6 +554,7 @@ var basicDot = function(ctx, x, y, size){
 			, Dpoint.y
 		)
 	}
+	this.$parent.trigger( e = $.Event('move.cs.sign') );
 }
 , strokeEndCallback = function(stroke){
 	// this = jSignatureClass instance
@@ -574,7 +576,6 @@ var basicDot = function(ctx, x, y, size){
 	// Well, actually, we don't need to *know* the point A, just the vector A->B
 	// so, we really need points B, C and AB vector.
 	var positionInStroke = stroke.x.length - 1
-	
 	if (positionInStroke > 0){
 		// there are at least 2 points in the stroke.we are in business.
 		var Cpoint = new Point(stroke.x[positionInStroke], stroke.y[positionInStroke])
@@ -610,6 +611,7 @@ var basicDot = function(ctx, x, y, size){
 			}
 		}
 	}
+	this.$parent.trigger( e = $.Event('end.cs.sign') );
 }
 
 
@@ -843,7 +845,6 @@ function jSignatureClass(parent, options, instanceExtensions) {
 			jSignatureInstance.dataEngine.addToStroke( getPointFromEvent(e) )
 			timer.kick()
 		}
-
 		return this
 
 	}).call( {}, this )
